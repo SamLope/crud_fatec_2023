@@ -1,4 +1,4 @@
-CREATE TABLE `fatec_alunos4` (
+CREATE TABLE `fatec_alunos` (
   `id` int(11) NOT NULL PRIMARY KEY  AUTO_INCREMENT,
   `first_name` varchar(250) NOT NULL,
   `last_name` varchar(250) NOT NULL

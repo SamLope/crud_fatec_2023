@@ -9,10 +9,10 @@ $received_data = json_decode(file_get_contents("php://input"));
 
 $data = array();    // Array vazio
 
-// Se a ação for "fetchall" seleciona tudo da tabela fatec_alunos
+// Se a ação for "fetchall" seleciona tudo da tabela fatec_professores
 if ($received_data->action == 'fetchall') {
     $query = "
- SELECT * FROM fatec_alunos 
+ SELECT * FROM fatec_professores 
  ORDER BY id DESC
  ";
     // Prepara e executa a query
@@ -27,35 +27,37 @@ if ($received_data->action == 'fetchall') {
     echo json_encode($data);
 }
 
-// Se a ação for "insert", faz um insert na tabela fatec_alunos
+// Se a ação for "insert", faz um insert na tabela fatec_professores
 if ($received_data->action == 'insert') {
     $data = array(
-        ':first_name' => $received_data->firstName,
-        ':last_name' => $received_data->lastName
+        ':nome' => $received_data->nome,
+        ':endereco' => $received_data->endereco,
+        ':curso' => $received_data->curso,
+        ':salario' => $received_data->salario
     );
 
     $query = "
- INSERT INTO fatec_alunos 
- (first_name, last_name) 
- VALUES (:first_name, :last_name)
+ INSERT INTO fatec_professores 
+ (nome, endereco, curso, salario) 
+ VALUES (:nome, :endereco, :curso, :salario)
  ";
 
     // Prepara e executa a query
     $statement = $connect->prepare($query);
     $statement->execute($data);
 
-    // Mensagem indicando que o aluno foi adicionado
+    // Mensagem indicando que o professor foi adicionado
     $output = array(
-        'message' => 'Aluno Adicionado'
+        'message' => 'Professor Adicionado'
     );
     // Retorna $output em formato json
     echo json_encode($output);
 }
 
-// Se a ação for "fetchSingle", faz um select do ID do registro de "received_data" na tabela fatec_alunos
+// Se a ação for "fetchSingle", faz um select do ID do registro de "received_data" na tabela fatec_professores
 if ($received_data->action == 'fetchSingle') {
     $query = "
- SELECT * FROM fatec_alunos 
+ SELECT * FROM fatec_professores 
  WHERE id = '" . $received_data->id . "'
  ";
 
@@ -68,25 +70,31 @@ if ($received_data->action == 'fetchSingle') {
     // Itera e retorna os dados do resultado em formato json
     foreach ($result as $row) {
         $data['id'] = $row['id'];
-        $data['first_name'] = $row['first_name'];
-        $data['last_name'] = $row['last_name'];
+        $data['nome'] = $row['nome'];
+        $data['endereco'] = $row['endereco'];
+        $data['curso'] = $row['curso'];
+        $data['salario'] = $row['salario'];
     }
     // Retorna $data em formato json
     echo json_encode($data);
 }
 
-// Se a ação for "update", faz um update na tabela fatec_alunos
+// Se a ação for "update", faz um update na tabela fatec_professores
 if ($received_data->action == 'update') {
     $data = array(
-        ':first_name' => $received_data->firstName,
-        ':last_name' => $received_data->lastName,
+        ':nome' => $received_data->nome,
+        ':endereco' => $received_data->endereco,
+        ':curso' => $received_data->curso,
+        ':salario' => $received_data->salario,
         ':id' => $received_data->hiddenId
     );
 
     $query = "
- UPDATE fatec_alunos 
- SET first_name = :first_name, 
- last_name = :last_name 
+ UPDATE fatec_professores 
+ SET nome = :nome, 
+ endereco = :endereco,
+ curso = :curso,
+ salario = :salario 
  WHERE id = :id
  ";
 
@@ -94,18 +102,18 @@ if ($received_data->action == 'update') {
     $statement = $connect->prepare($query);
     $statement->execute($data);
 
-    // Mensagem indicando que o aluno foi atualizado
+    // Mensagem indicando que o professor foi atualizado
     $output = array(
-        'message' => 'Aluno Atualizado'
+        'message' => 'Professor Atualizado'
     );
     // Retorna $output em formato json
     echo json_encode($output);
 }
 
-// Se a ação for "delete", faz um delete na tabela fatec_alunos
+// Se a ação for "delete", faz um delete na tabela fatec_professores
 if ($received_data->action == 'delete') {
     $query = "
- DELETE FROM fatec_alunos 
+ DELETE FROM fatec_professores 
  WHERE id = '" . $received_data->id . "'
  ";
 
@@ -113,9 +121,9 @@ if ($received_data->action == 'delete') {
     $statement = $connect->prepare($query);
     $statement->execute();
 
-    // Mensagem indicando que o aluno foi deletado
+    // Mensagem indicando que o professor foi deletado
     $output = array(
-        'message' => 'Aluno Deletado'
+        'message' => 'Professor Deletado'
     );
     // Retorna $data em formato json
     echo json_encode($output);
